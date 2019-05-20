@@ -7,6 +7,11 @@ let(:card) {Oystercard.new}
     expect(card.balance).to eql(0)
   end
 
+  it 'has the ability to top up' do
+    card.top_up(10)
+    expect(card.balance).to eql(10)
+  end
+
 
  #money on card
  #add money to my card
