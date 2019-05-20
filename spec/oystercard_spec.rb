@@ -24,6 +24,15 @@ let(:card) {Oystercard.new}
     expect {card.top_up(50)}. to raise_error "you can only have a maximum credit of £90"
   end
 
+  it 'can deduct fare from card' do
+    pending()
+    card.top_up(80)
+    card.deduct(40)
+    expect(card.deduct(40)).to eq(40)
+  end
+
+  it 'does something'
+end
 
  #money on card
  #add money to my card
@@ -37,4 +46,4 @@ let(:card) {Oystercard.new}
  #what zone a station is in
  #penalty charge deducted if i fail to touch in or out
  #need to have the correct fare calcualted
-end
+
