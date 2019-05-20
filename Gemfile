@@ -1,4 +1,9 @@
-source 'https://rubygems.org' do
+source 'https://rubygems.org'
 
-  gem 'rspec'
-end
+  group :test do
+    gem 'rspec'
+  end
+
+  # group :development do
+  #   gem 'rspec'
+  # end

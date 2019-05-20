@@ -12,6 +12,15 @@ let(:card) {Oystercard.new}
     expect(card.balance).to eql(10)
   end
 
+  it "can top up a maximum of £90" do
+    expect{card.top_up(100)}.to raise_error "You can only top up maximum £90 on your oystercard"
+  end
+
+  it "will not top up over maximum limit of £90" do
+    card.top_up(50)
+    expect {card.top_up(50)}. to raise_error "you can only have a maximum credit of £90"
+  end
+
 
  #money on card
  #add money to my card
