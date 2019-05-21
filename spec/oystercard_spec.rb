@@ -5,6 +5,7 @@ require 'oystercard.rb'
 
 describe Oystercard do
 let(:card) {Oystercard.new}
+let(:station_double) {double('station double', station_name: "Barbican")}
 
   it "can create an instance of it self with default balance of 0" do
     expect(card.balance).to eql(0)
@@ -30,7 +31,7 @@ let(:card) {Oystercard.new}
 
   it 'can touch in and start journey' do
     card.top_up(Oystercard::MINIMUM_BALANCE)
-    card.touch_in
+    card.touch_in(station_double)
     expect(card.in_journey).to eql(true)
   end
 
@@ -40,15 +41,29 @@ let(:card) {Oystercard.new}
   end
 
   it 'will raise an error if card touches in with less than minimum fare' do
-    expect { card.touch_in }.to raise_error 'Card does not have minumum fare loaded!'
+    expect { card.touch_in(station_double) }.to raise_error 'Card does not have minumum fare loaded!'
   end
 
   it "will reduce balance once card is touched out" do
     card.top_up(Oystercard::MINIMUM_FARE)
-    card.touch_in
+    card.touch_in(station_double)
     expect { card.touch_out }.to change{ card.balance }.by ( - Oystercard::MINIMUM_FARE)
   end
 
+  it 'will remember the entry station' do
+    card.top_up(Oystercard::MINIMUM_FARE)
+    card.touch_in(station_double)
+    expect(card.entry_station).to eq(station_double)
+  end
+
+  it 'will forget the entry station when touched out' do
+    card.top_up(Oystercard::MINIMUM_FARE)
+    card.touch_in(station_double)
+
+    card.touch_out
+
+    expect(card.entry_station).to eq(nil)
+  end
 end
 
  #money on card
