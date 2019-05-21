@@ -30,7 +30,19 @@ let(:card) {Oystercard.new}
     expect(card.balance).to eq(40)
   end
 
-  it 'does something'
+  it 'can initialize card journey status as false' do
+    expect(card.in_journey).to eql (false)
+  end
+
+  it 'can touch in and start journey' do
+    card.touch_in
+    expect(card.in_journey).to eql(true)
+  end
+
+  it 'can touch out and end journey' do
+    card.touch_out
+    expect(card.in_journey).to eql(false)
+  end
 end
 
  #money on card
