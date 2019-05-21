@@ -25,10 +25,9 @@ let(:card) {Oystercard.new}
   end
 
   it 'can deduct fare from card' do
-    pending()
     card.top_up(80)
     card.deduct(40)
-    expect(card.deduct(40)).to eq(40)
+    expect(card.balance).to eq(40)
   end
 
   it 'does something'
@@ -46,4 +45,3 @@ end
  #what zone a station is in
  #penalty charge deducted if i fail to touch in or out
  #need to have the correct fare calcualted
-
