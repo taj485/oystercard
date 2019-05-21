@@ -35,6 +35,7 @@ let(:card) {Oystercard.new}
   end
 
   it 'can touch in and start journey' do
+    card.top_up(Oystercard::MINIMUM_BALANCE)
     card.touch_in
     expect(card.in_journey).to eql(true)
   end
@@ -42,6 +43,10 @@ let(:card) {Oystercard.new}
   it 'can touch out and end journey' do
     card.touch_out
     expect(card.in_journey).to eql(false)
+  end
+
+  it 'will raise an error if card touches in with less than minimum fare' do
+    expect { card.touch_in }.to raise_error 'Card does not have minumum fare loaded!'
   end
 end
 

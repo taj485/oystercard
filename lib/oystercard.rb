@@ -5,7 +5,7 @@ class Oystercard
   attr_accessor :balance
   attr_reader :in_journey
   BALANCE_LIMIT = 90
-  MINIMUM_Balance = 1
+  MINIMUM_BALANCE = 1
 
   def initialize(balance = 0, in_journey = false)
     @balance = balance
@@ -13,12 +13,9 @@ class Oystercard
   end
 
   def top_up(amount)
-    raise "You can only top up maximum £90 on your oystercard" if amount > BALANCE_LIMIT
-    if under_balance_limit?(amount)
-      self.balance += amount  #self = oystercard.balance
-    else
-      raise "you can only have a maximum credit of £90"
-    end
+    raise "You can only top up maximum £#{BALANCE_LIMIT} on your oystercard" if amount > BALANCE_LIMIT
+    raise "you can only have a maximum credit of £#{BALANCE_LIMIT}" if over_balance_limit?(amount)
+    self.balance += amount  #self = oystercard.balance
   end
 
   def deduct(amount)
@@ -26,6 +23,7 @@ class Oystercard
   end
 
   def touch_in
+    raise 'Card does not have minumum fare loaded!' if balance < MINIMUM_BALANCE
     @in_journey = true
   end
 
@@ -35,8 +33,8 @@ class Oystercard
 
   private
 
-  def under_balance_limit?(amount)
-    (@balance + amount) <= BALANCE_LIMIT
+  def over_balance_limit?(amount)
+    (@balance + amount) > BALANCE_LIMIT
   end
 
 end
