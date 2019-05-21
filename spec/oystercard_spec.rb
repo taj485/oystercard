@@ -5,7 +5,8 @@ require 'oystercard.rb'
 
 describe Oystercard do
 let(:card) {Oystercard.new}
-let(:station_double) {double('station double', station_name: "Barbican")}
+let(:station_double) { double('station double', station_name: "Barbican") }
+let(:station_exit_double) { double('station exit double', station_name: "Euston") }
 
   it "can create an instance of it self with default balance of 0" do
     expect(card.balance).to eql(0)
@@ -36,7 +37,7 @@ let(:station_double) {double('station double', station_name: "Barbican")}
   end
 
   it 'can touch out and end journey' do
-    card.touch_out
+    card.touch_out(station_exit_double)
     expect(card.in_journey).to eql(false)
   end
 
@@ -47,7 +48,7 @@ let(:station_double) {double('station double', station_name: "Barbican")}
   it "will reduce balance once card is touched out" do
     card.top_up(Oystercard::MINIMUM_FARE)
     card.touch_in(station_double)
-    expect { card.touch_out }.to change{ card.balance }.by ( - Oystercard::MINIMUM_FARE)
+    expect { card.touch_out(station_exit_double) }.to change{ card.balance }.by ( - Oystercard::MINIMUM_FARE)
   end
 
   it 'will remember the entry station' do
@@ -60,9 +61,20 @@ let(:station_double) {double('station double', station_name: "Barbican")}
     card.top_up(Oystercard::MINIMUM_FARE)
     card.touch_in(station_double)
 
-    card.touch_out
+    card.touch_out(station_exit_double)
 
     expect(card.entry_station).to eq(nil)
+  end
+
+  it 'will have an empty list of journeys by default' do
+    expect(card.journeys).to eql([])
+  end
+
+  it "touching in and out will create one journey" do
+    card.top_up(Oystercard::MINIMUM_FARE)
+    card.touch_in(station_double)
+    card.touch_out(station_exit_double)
+    expect(card.journeys).to eql([{:entry => station_double, :exit => station_exit_double}])
   end
 end
 
