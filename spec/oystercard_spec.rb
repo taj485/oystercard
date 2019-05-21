@@ -24,12 +24,6 @@ let(:card) {Oystercard.new}
     expect {card.top_up(50)}. to raise_error "you can only have a maximum credit of £90"
   end
 
-  it 'can deduct fare from card' do
-    card.top_up(80)
-    card.deduct(40)
-    expect(card.balance).to eq(40)
-  end
-
   it 'can initialize card journey status as false' do
     expect(card.in_journey).to eql (false)
   end
@@ -48,6 +42,13 @@ let(:card) {Oystercard.new}
   it 'will raise an error if card touches in with less than minimum fare' do
     expect { card.touch_in }.to raise_error 'Card does not have minumum fare loaded!'
   end
+
+  it "will reduce balance once card is touched out" do
+    card.top_up(Oystercard::MINIMUM_FARE)
+    card.touch_in
+    expect { card.touch_out }.to change{ card.balance }.by ( - Oystercard::MINIMUM_FARE)
+  end
+
 end
 
  #money on card

@@ -6,6 +6,7 @@ class Oystercard
   attr_reader :in_journey
   BALANCE_LIMIT = 90
   MINIMUM_BALANCE = 1
+  MINIMUM_FARE = 1
 
   def initialize(balance = 0, in_journey = false)
     @balance = balance
@@ -18,9 +19,6 @@ class Oystercard
     self.balance += amount  #self = oystercard.balance
   end
 
-  def deduct(amount)
-    self.balance -= amount
-  end
 
   def touch_in
     raise 'Card does not have minumum fare loaded!' if balance < MINIMUM_BALANCE
@@ -29,12 +27,17 @@ class Oystercard
 
   def touch_out
     @in_journey = false
+    deduct(MINIMUM_FARE)
   end
 
   private
 
   def over_balance_limit?(amount)
     (@balance + amount) > BALANCE_LIMIT
+  end
+
+  def deduct(amount)
+    self.balance -= amount
   end
 
 end
