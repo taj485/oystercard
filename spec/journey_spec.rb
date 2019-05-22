@@ -2,6 +2,7 @@ require 'journey'
 
 describe Journey do
  let(:station_double) {double(:entry_station, :station_name => "Barbican Station")}
+ let(:station_exit_double) {double(:exit_station, :station_name => "Euston")}
  let(:journey) {Journey.new}
 
   it 'will remember the entry station' do
@@ -17,13 +18,12 @@ describe Journey do
   end
 
   it 'will have an empty list of journeys by default' do
-    expect(card.journeys).to eql([])
+    expect(journey.history).to eql([])
   end
 
   it "touching in and out will create one journey" do
-    card.top_up(Oystercard::MINIMUM_FARE)
-    card.touch_in(station_double)
-    card.touch_out(station_exit_double)
-    expect(card.journeys).to eql([{:entry => station_double, :exit => station_exit_double}])
+    journey.start_journey(station_double.station_name)
+    journey.end_journey(station_exit_double.station_name)
+    expect(journey.history).to eql([{:entry => "Barbican Station", :exit => "Euston"}])
   end
 end
