@@ -16,23 +16,22 @@ class Oystercard
   end
 
   def top_up(amount)
-    raise "You can only top up maximum £#{BALANCE_LIMIT} on your oystercard" if amount > BALANCE_LIMIT
     raise "you can only have a maximum credit of £#{BALANCE_LIMIT}" if over_balance_limit?(amount)
     self.balance += amount  #self = oystercard.balance
   end
 
 
-  def touch_in(entry_station)
+  def touch_in(entry_station, journey = Journey.new)
     raise 'Card does not have minumum fare loaded!' if balance < MINIMUM_BALANCE
     @in_journey = true
-    @entry_station = entry_station
+    @journey = journey
+    @journey.start_journey(entry_station)
   end
 
   def touch_out(exit_station)
     @in_journey = false
     deduct(MINIMUM_FARE)
-    journeys.push({:entry => @entry_station, :exit => exit_station})
-    @entry_station = nil
+    @journey.end_journey(exit_sation)
   end
 
   private
